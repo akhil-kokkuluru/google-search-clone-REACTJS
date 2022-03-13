@@ -3,9 +3,29 @@ import {Component} from 'react'
 import SuggestionItem from '../SuggestionItem'
 
 class GoogleSuggestions extends Component {
+  state = {searchText: ''}
+
+  onClickingImage = valuesInsearch => {
+    const {searchText} = this.state
+
+    this.setState({searchText: valuesInsearch})
+  }
+
+  onInputtyping = tpying => {
+    const typingValue = tpying.target.value
+
+    const {searchText} = this.state
+
+    this.setState({searchText: typingValue})
+  }
+
   render() {
     const {suggestionsList} = this.props
-    console.log(suggestionsList)
+    const {searchText} = this.state
+    const modifiedList = suggestionsList.filter(items =>
+      items.suggestion.toLowerCase().includes(searchText.toLowerCase()),
+    )
+
     return (
       <div className="contentBG">
         <img
@@ -24,10 +44,18 @@ class GoogleSuggestions extends Component {
               type="search"
               className="inputEl"
               placeholder="Search Google"
+              value={searchText}
+              onChange={this.onInputtyping}
             />
           </div>
           <ul className="unOdered">
-            <SuggestionItem suggestionsList={suggestionsList[0]} />
+            {modifiedList.map(newElement => (
+              <SuggestionItem
+                suggestionsList={newElement}
+                key={newElement.id}
+                onClicking={this.onClickingImage}
+              />
+            ))}
           </ul>
         </div>
       </div>
